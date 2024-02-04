@@ -2,6 +2,7 @@
 #it will break and take forever to run
 
 #if you want to know why its so terrible, this is my first time doing anything more complex than math in python
+#also the V1 is somehow even worse, so please dont ask about it
 
 from PIL import Image
 import math
@@ -51,7 +52,7 @@ def doframe(filename):
 
 
 
-cam = cv2.VideoCapture("badapple.mp4")#video file name goes here
+cam = cv2.VideoCapture("video.mp4")#video file name goes here
 try:
     if not os.path.exists("data"):
         os.makedirs("data")

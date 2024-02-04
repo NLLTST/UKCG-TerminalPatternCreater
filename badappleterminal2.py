@@ -1,6 +1,8 @@
 #this code was made to work for a quick demonstration, dont use it for more than that
 #it will break and take forever to run
 
+#if you want to know why its so terrible, this is my first time doing anything more complex than math in python
+
 from PIL import Image
 import math
 import os
@@ -16,20 +18,20 @@ def averagelist(toavg):
 
 def doframe(filename):
     img = Image.open("frame.png")
-    imglist = list(img.resize([64,48]).getdata())
+    imglist = list(img.resize([64,48]).getdata()) #resize image to 64x48 pixels and turn it into a list of RGB values
     img.close()
     avglist = []
     for i in imglist:
-        avglist.append(averagelist(i))
+        avglist.append(averagelist(i)) #average colors make image greyscale
 
     for f in range(15): #one loop per pattern on a page
         x, y = f%5, math.floor(f/5)
-        name = "data/"+str((filename*1000)+f+1000000000000)+".cgp"
+        name = "data/"+str((filename*1000)+f+1000000000000)+".cgp" #make sure all file names are the same length, the order gets messed up if you dont
         cpg = open(name,"w")
-        if x == 0:
-            for yy in range(16): #one for the y axis
+        if x == 0: #this is a horrible approach, im hopefully going to redo this eventually
+            for yy in range(16):
                 cpg.write("(-10)"*8)
-                for xx in avglist[((yy+(y*16))*64)+(x*16):((yy+(y*16))*64)+(x*16)+8]:
+                for xx in avglist[((yy+(y*16))*64)+(x*16):((yy+(y*16))*64)+(x*16)+8]: #i couldnt tell you how this works
                     cpg.write("("+str(math.floor(xx/12.2)-10)+")")
                 cpg.write("\n")
         elif x == 4:
@@ -43,28 +45,13 @@ def doframe(filename):
                 for xx in avglist[((yy+(y*16))*64)+(x*16)-8:((yy+(y*16))*64)+(x*16)+8]:
                     cpg.write("("+str(math.floor(xx/12.2)-10)+")")
                 cpg.write("\n")
-        cpg.write("""
-0000000000000000
-0000000000000000
-0000000000000000
-0000000000000000
-0000000000000000
-0000000000000000
-0000000000000000
-0000000000000000
-0000000000000000
-0000000000000000
-0000000000000000
-0000000000000000
-0000000000000000
-0000000000000000
-0000000000000000
-0000000000000000""")
+        cpg.write(""" 
+0000000000000000"""*16) #write blank prefab data
         cpg.close()
 
 
 
-cam = cv2.VideoCapture("badapple.mp4")
+cam = cv2.VideoCapture("badapple.mp4")#video file name goes here
 try:
     if not os.path.exists("data"):
         os.makedirs("data")
@@ -72,16 +59,17 @@ except OSError:
     print("directory failed")
 
 curframe = 0
-while True:
+while curframe < 150: #only makes the first 150 frames, replace with "while True:" to do entire video
     ret,frame = cam.read()
     if ret:
         cv2.imwrite("frame.png", frame)
-        if curframe % 12 == 0:
-            doframe(curframe)
-            print(str(curframe)+" "+str(curframe/12))
+        doframe(curframe)
+        print("performing frame: "+str(curframe)) #hopefully going to add an ETA timer eventually
         curframe += 1
     else:
         break
 
 time = time.process_time()
-print("\nTook " + str(time) + " Seconds")
+print("\nTook " + str(time) + " Seconds") #it orignally told you how many minutes, but for some reason it always said 0
+
+#if you understood this, congrats, your probably smarter than me

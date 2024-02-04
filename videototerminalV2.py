@@ -11,11 +11,10 @@ import cv2
 import time
 
 def averagelist(toavg):
-    if True:
-        avg = 0
-        for a in toavg:
-            avg += a
-        return avg/len(toavg)
+    avg = 0
+    for a in toavg:
+        avg += a
+    return avg/len(toavg)
 
 def doframe(filename):
     img = Image.open("frame.png")
@@ -23,7 +22,7 @@ def doframe(filename):
     img.close()
     avglist = []
     for i in imglist:
-        avglist.append(averagelist(i)) #average colors make image greyscale
+        avglist.append(averagelist(i)) #average colors to make image greyscale
 
     for f in range(15): #one loop per pattern on a page
         x, y = f%5, math.floor(f/5)
@@ -47,12 +46,12 @@ def doframe(filename):
                     cpg.write("("+str(math.floor(xx/12.2)-10)+")")
                 cpg.write("\n")
         cpg.write(""" 
-0000000000000000"""*16) #write blank prefab data
+0000000000000000"""*16) #write 16 lines of blank prefab data
         cpg.close()
 
 
 
-cam = cv2.VideoCapture("video.mp4")#video file name goes here
+cam = cv2.VideoCapture("video.mp4") #video file name goes here!
 try:
     if not os.path.exists("data"):
         os.makedirs("data")
@@ -60,7 +59,7 @@ except OSError:
     print("directory failed")
 
 curframe = 0
-while curframe < 150: #only makes the first 150 frames, replace with "while True:" to do entire video
+while True: #replace with "while curframe < number" to limit the number of frames to number
     ret,frame = cam.read()
     if ret:
         cv2.imwrite("frame.png", frame)

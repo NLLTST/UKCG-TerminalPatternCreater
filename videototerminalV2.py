@@ -17,7 +17,7 @@ def averagelist(toavg):
     return avg/len(toavg)
 
 def doframe(filename):
-    img = Image.open("frame.png")
+    img = Image.open("patterndata/frame.png")
     imglist = list(img.resize([64,48]).getdata()) #resize image to 64x48 pixels and turn it into a list of RGB values
     img.close()
     avglist = []
@@ -53,8 +53,8 @@ def doframe(filename):
 
 cam = cv2.VideoCapture("video.mp4") #video file name goes here!
 try:
-    if not os.path.exists("data"):
-        os.makedirs("data")
+    if not os.path.exists("patterndata"):
+        os.makedirs("patterndata")
 except OSError:
     print("directory failed")
 
@@ -62,14 +62,19 @@ curframe = 0
 while True: #replace with "while curframe < number" to limit the number of frames to number
     ret,frame = cam.read()
     if ret:
-        cv2.imwrite("frame.png", frame)
+        cv2.imwrite("patterndata/frame.png", frame)
         doframe(curframe)
         print("performing frame: "+str(curframe)) #hopefully going to add an ETA timer eventually
         curframe += 1
     else:
         break
+os.remove("patterndata/frame.png")
 
 time = time.process_time()
 print("\nTook " + str(time) + " Seconds") #it orignally told you how many minutes, but for some reason it always said 0
+print("Frames savd to the Patterndata folder")
+print("Move all the files inside Patterndata to ULTRAKILL/Cybergrind/Patterns")
+print("\nPress Enter to close")
+input()
 
 #if you understood this, congrats, your probably smarter than me
